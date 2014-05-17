@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -98,6 +99,10 @@ abstract class AbstractUserController
      */
     protected function listAction(Request $request)
     {
+        if (!$this->security->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException("permission denied to show users");
+        }
+
         $entities = $this
             ->doctrine
             ->getManagerForClass($this->entityClass)
@@ -133,6 +138,11 @@ abstract class AbstractUserController
             throw new NotFoundHttpException("entity with id {$id} not found!");
         }
 
+        if(!$this->security->isGranted('ROLE_ADMIN') &&
+            $entity->getId() !== $this->getUser()->getId()) {
+            throw new AccessDeniedException("permission denied to show user with {$id}");
+        }
+
         return $this->render($this->showTemplate, array(
             'entity' => $entity,
             'listroute' => $this->listRoute,
@@ -158,6 +168,10 @@ abstract class AbstractUserController
 
             if (is_null($entity)) {
                 throw new NotFoundHttpException("user with id {$id} not found!");
+            }
+            if(!$this->security->isGranted('ROLE_ADMIN') &&
+                $entity->getId() !== $this->getUser()->getId()) {
+                throw new AccessDeniedException("permission denied to edit user with {$id}");
             }
         } else {
             /** @var AbstractUser $entity */
@@ -222,6 +236,10 @@ abstract class AbstractUserController
 
         if (is_null($entity)) {
             throw new NotFoundHttpException("User with id {$id} not found!");
+        }
+
+        if (!$this->security->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException("permission denied to delete entity with {$id}");
         }
 
         if ($entity->getId() == $this->getUser()->getId()) {
