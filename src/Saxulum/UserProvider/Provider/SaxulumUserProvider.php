@@ -2,6 +2,7 @@
 
 namespace Saxulum\UserProvider\Provider;
 
+use Saxulum\UserProvider\Manager\UserManager;
 use Saxulum\UserProvider\Model\AbstractUser;
 
 class SaxulumUserProvider
@@ -42,12 +43,20 @@ class SaxulumUserProvider
             );
         });
 
-        $container['security.access_rules'] = array(
-            array('^/[^/]*/login', 'IS_AUTHENTICATED_ANONYMOUSLY'),
-        );
+        $container['saxulum.userprovider.manager'] = $container->share(function () use ($container) {
+            return new UserManager($container['security.encoder.digest']);
+        });
 
-        $container['security.role_hierarchy'] = array(
-            AbstractUser::ROLE_ADMIN => array(AbstractUser::ROLE_USER),
-        );
+        $container['security.access_rules'] = $container->share(function () {
+            return array(
+                array('^/[^/]*/login', 'IS_AUTHENTICATED_ANONYMOUSLY'),
+            );
+        });
+
+        $container['security.role_hierarchy'] = $container->share(function () {
+            return array(
+                AbstractUser::ROLE_ADMIN => array(AbstractUser::ROLE_USER),
+            );
+        });
     }
 }

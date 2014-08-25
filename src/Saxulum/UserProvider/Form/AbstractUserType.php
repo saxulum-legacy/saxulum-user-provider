@@ -32,7 +32,7 @@ abstract class AbstractUserType extends AbstractType
             ->add('roles', 'choice', array(
                 'choices' => AbstractUser::getPredefinedRoles(),
                 'multiple' => true,
-                'required' => false
+                'required' => true
             ))
             ->add('enabled', 'checkbox', array('required' => false))
         ;
