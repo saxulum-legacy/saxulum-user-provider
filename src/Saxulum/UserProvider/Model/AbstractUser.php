@@ -103,18 +103,10 @@ abstract class AbstractUser implements UserInterface
 
     /**
      * @param  PasswordEncoderInterface $passwordencoder
-     * @return bool
      */
     public function updatePassword(PasswordEncoderInterface $passwordencoder)
     {
-        if (!empty($this->plainPassword)) {
-            $this->password = $passwordencoder->encodePassword($this->plainPassword, $this->getSalt());
-        }
-        if ($this->getPassword()) {
-            return true;
-        }
-
-        return false;
+        $this->password = $passwordencoder->encodePassword($this->plainPassword, $this->getSalt());
     }
 
     public function eraseCredentials()
