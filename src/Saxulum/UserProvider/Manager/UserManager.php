@@ -26,9 +26,12 @@ class UserManager
      */
     public function update(AbstractUser $user)
     {
-        $user->setSalt(uniqid(mt_rand()));
-        if(!$user->updatePassword($this->passwordEncoder)) {
-            throw new \Exception("Can't update password!");
+        if(null === $user->getPlainPassword()) {
+            return;
         }
+
+        $user->setSalt(uniqid(mt_rand()));
+        $user->updatePassword($this->passwordEncoder);
+        $user->eraseCredentials();
     }
 }
