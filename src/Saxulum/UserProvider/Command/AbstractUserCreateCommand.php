@@ -68,10 +68,7 @@ EOT
             'username' => $username
         ));
 
-        if (!is_null($existingUser)) {
-            $output->writeln("<error>User with this username allready exists</error>");
-            die();
-        }
+        $user->updatePassword($this->container['security.encoder.digest']);
 
         /** @var AbstractUser $user */
         $user = new $this->userClass;
