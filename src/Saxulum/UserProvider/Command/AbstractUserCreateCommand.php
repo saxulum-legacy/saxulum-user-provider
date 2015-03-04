@@ -68,8 +68,6 @@ EOT
             'username' => $username
         ));
 
-        $user->updatePassword($this->container['security.encoder.digest']);
-
         /** @var AbstractUser $user */
         $user = new $this->userClass;
         $user->setUsername($username);
@@ -83,10 +81,7 @@ EOT
             $user->addRole('ROLE_ADMIN');
         }
 
-        if (!$user->updatePassword($this->container['security.encoder.digest'])) {
-            $output->writeln("<error>Can't set password</error>");
-            die();
-        }
+        $user->updatePassword($this->container['security.encoder.digest']);
 
         $om->persist($user);
         $om->flush();
