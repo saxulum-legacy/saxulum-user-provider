@@ -26,8 +26,7 @@ abstract class AbstractUserType extends AbstractType
     {
         $builder
             ->add('username')
-            ->add('plainpassword', 'password', array('required' => false))
-            ->add('repeatedpassword', 'password', array('required' => false))
+            ->add('plainpassword', 'repeated', array('type' => 'password', 'required' => false))
             ->add('email', 'email')
             ->add('roles', 'choice', array(
                 'choices' => AbstractUser::getPredefinedRoles(),
