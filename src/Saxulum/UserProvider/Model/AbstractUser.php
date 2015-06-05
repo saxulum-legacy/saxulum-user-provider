@@ -5,7 +5,7 @@ namespace Saxulum\UserProvider\Model;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContext;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 abstract class AbstractUser implements UserInterface
@@ -258,13 +258,16 @@ abstract class AbstractUser implements UserInterface
      */
     public static function loadValidatorMetadata(ClassMetadata $metadata)
     {
-        $metadata->addConstraint(new Assert\Callback(array(
-            'methods' => array(function (AbstractUser $user, ExecutionContext $context) {
-                if ($user->getPlainPassword() && ($user->getPlainPassword() !== $user->getRepeatedPassword())) {
-                    $context->addViolation("passwords doesn't match");
-                }
-            }),
-        )));
+        $metadata->addConstraint(new Assert\Callback(function (AbstractUser $user, ExecutionContextInterface $context) {
+            if ($user->getPlainPassword() && ($user->getPlainPassword() !== $user->getRepeatedPassword())) {
+                $context
+                    ->buildViolation('passwords doesn\'t match')
+                    ->atPath('plainPassword')
+                    ->addViolation()
+                ;
+            }
+        }
+        ));
     }
 
     /**
