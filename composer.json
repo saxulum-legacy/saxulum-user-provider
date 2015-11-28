@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.3.3,<8.0",
         "doctrine/common": "~2.3",
         "symfony/security": "~2.4",
         "symfony/validator": "~2.4",
