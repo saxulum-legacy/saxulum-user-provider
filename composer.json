@@ -10,10 +10,10 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3,<8.0",
+        "php": ">=5.3.9,<8.0",
         "doctrine/common": "~2.3",
-        "symfony/security": "~2.4",
-        "symfony/validator": "~2.4",
+        "symfony/security": "~2.4|~3.0",
+        "symfony/validator": "~2.4|~3.0",
         "pimple/pimple": ">=2.1,<4"
     },
     "require-dev": {
@@ -22,12 +22,12 @@
     "suggest": {
         "saxulum/saxulum-console": "~2.0",
         "saxulum/saxulum-doctrine-orm-manager-registry-provider": "~2.2",
-        "symfony/form": "~2.4",
-        "symfony/routing": "~2.4",
-        "symfony/translation": "~2.4",
+        "symfony/form": "~2.4|~3.0",
+        "symfony/routing": "~2.4|~3.0",
+        "symfony/translation": "~2.4|~3.0",
         "twig/twig": "~1.2"
     },
     "autoload": {
-        "psr-0": { "Saxulum\\UserProvider": "src/" }
+        "psr-4": { "Saxulum\\UserProvider\\": "src/" }
     }
 }
